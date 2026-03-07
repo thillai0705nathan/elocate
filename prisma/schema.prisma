@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String          @id @default(cuid())
+  name           String?
+  email          String          @unique
+  password       String
+  createdAt      DateTime        @default(now())
+  pickupRequests PickUpRequest[]
+  posts          Post[]
+}
+
+model Facility {
+  id       Int     @id @default(autoincrement())
+  name     String
+  lat      Float
+  lon      Float
+  address  String
+  verified Boolean @default(false)
+  contact  String?
+  time     String?
+}
+
+model PickUpRequest {
+  id               String   @id @default(cuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id])
+  status           String   @default("PENDING")
+  address          String
+  date             DateTime
+  time             String?
+  items            String
+  price            Float?
+  facilityName     String?
+  createdAt        DateTime @default(now())
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  title     String
+  content   String
+  createdAt DateTime @default(now())
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  message   String
+  createdAt DateTime @default(now())
+}
+
