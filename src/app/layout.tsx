@@ -1,5 +1,5 @@
+"use client";
 import "./globals.css";
-import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import Script from "next/script";
 import NextTopLoader from "nextjs-toploader";
@@ -10,11 +10,6 @@ const poppins = Poppins({
   subsets: ["latin"],
   weight: "500",
 });
-
-export const metadata: Metadata = {
-  title: "ELocate",
-  description: "ELocate - One stop solution to Recycle E-Waste, E-waste Facility Locator",
-};
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

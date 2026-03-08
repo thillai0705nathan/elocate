@@ -1,6 +1,7 @@
+"use client"
 import Home from "./Components";
 
-export default function App() {
+export default function Page() {
   return (
     <>
       <Home/>
