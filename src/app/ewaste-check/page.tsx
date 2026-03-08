@@ -292,6 +292,7 @@ export default function EwasteCheckPage() {
                 <input
                   type="file"
                   accept="image/*"
+                  aria-label="Upload image for e-waste detection"
                   onChange={(e) => {
                     const file = e.target.files?.[0];
                     if (file) {
