@@ -7,7 +7,7 @@ import { EWASTE_MAPPING, EWasteDetails } from "../data/eWasteInfo"
 import Link from "next/link"
 import { useGamification } from "../utils/useGamification"
 import { generateEWasteReport } from "../utils/pdfGenerator"
-import { Eye, ShieldCheck, Zap, Layers, Trophy, Mic, FileText, Share2, Sparkles, RefreshCcw } from "lucide-react"
+import { ShieldCheck, Zap, Layers, Trophy, FileText, Sparkles, RefreshCcw } from "lucide-react"
 
 export default function EwasteCheckPage() {
   const [imageURL, setImageURL] = useState<string>("")
@@ -15,8 +15,6 @@ export default function EwasteCheckPage() {
   const [topPrediction, setTopPrediction] = useState<{ label: string; confidence: number } | null>(null)
   const [multiDetections, setMultiDetections] = useState<any[]>([])
   const [details, setDetails] = useState<EWasteDetails | null>(null)
-  const [showXAI, setShowXAI] = useState(false)
-  const [isListening, setIsListening] = useState(false)
   const [suggestion, setSuggestion] = useState<{ type: string; text: string } | null>(null)
 
   const imgRef = useRef<HTMLImageElement>(null)
@@ -24,25 +22,6 @@ export default function EwasteCheckPage() {
   const { points, level, addPoints } = useGamification()
 
   const MODEL_URL = "https://teachablemachine.withgoogle.com/models/-54uzdzxw/"
-
-  // Voice Assistant Integration
-  const startListening = () => {
-    if (!('webkitSpeechRecognition' in window)) {
-      alert("Speech recognition not supported in this browser.");
-      return;
-    }
-    const recognition = new (window as any).webkitSpeechRecognition();
-    recognition.lang = 'en-US';
-    recognition.onstart = () => setIsListening(true);
-    recognition.onend = () => setIsListening(false);
-    recognition.onresult = (event: any) => {
-      const command = event.results[0][0].transcript.toLowerCase();
-      console.log("Voice Command:", command);
-      if (command.includes("scan")) runPrediction();
-      if (command.includes("book") || command.includes("pickup")) alert("Opening Pickup Booking...");
-    };
-    recognition.start();
-  };
 
   // Smart Suggestion Logic
   const generateSuggestion = (label: string, hazard: string) => {
@@ -80,7 +59,7 @@ export default function EwasteCheckPage() {
     }
   };
 
-  // Run Object Detection & Heatmap Simulation
+  // Run Object Detection Overlay
   const drawDetections = (detections: any[]) => {
     const canvas = canvasRef.current;
     if (!canvas || !imgRef.current) return;
@@ -111,19 +90,6 @@ export default function EwasteCheckPage() {
       ctx.font = '16px Arial bold';
       ctx.fillText(`${det.class} (${(det.score * 100).toFixed(0)}%)`, x + 5, y - 10);
 
-      // Simulation of Grad-CAM (Heatmap)
-      if (showXAI) {
-        const gradient = ctx.createRadialGradient(
-          x + width / 2, y + height / 2, 0,
-          x + width / 2, y + height / 2, Math.max(width, height) / 2
-        );
-        gradient.addColorStop(0, 'rgba(255, 0, 0, 0.4)');
-        gradient.addColorStop(0.5, 'rgba(255, 255, 0, 0.2)');
-        gradient.addColorStop(1, 'rgba(0, 255, 0, 0)');
-
-        ctx.fillStyle = gradient;
-        ctx.fillRect(x, y, width, height);
-      }
     });
   };
 
@@ -218,10 +184,6 @@ export default function EwasteCheckPage() {
     }
   }
 
-  useEffect(() => {
-    if (multiDetections.length > 0) drawDetections(multiDetections);
-  }, [showXAI]);
-
   return (
     <div className="min-h-screen bg-[#07130e] text-slate-200 py-16 px-6 lg:px-12 relative overflow-hidden selection:bg-emerald-500/30">
       {/* Animated Atmosphere Background */}
@@ -310,18 +272,6 @@ export default function EwasteCheckPage() {
               {/* Advanced AI Controls - Premium Dark Bar */}
               <div className="p-10 bg-black/40 border-t border-white/5 flex flex-wrap justify-between items-center gap-6">
                 <div className="flex gap-4">
-                  <button
-                    onClick={() => setShowXAI(!showXAI)}
-                    className={`flex items-center gap-3 px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all duration-500 border ${showXAI ? 'bg-amber-500 border-amber-400 text-black shadow-[0_0_25px_rgba(245,158,11,0.3)]' : 'bg-white/5 text-slate-400 border-white/10 hover:bg-white/10'}`}
-                  >
-                    <Eye size={18} /> {showXAI ? "Disable Map" : "XAI Heatmap"}
-                  </button>
-                  <button
-                    onClick={startListening}
-                    className={`flex items-center gap-3 px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all duration-500 border ${isListening ? 'bg-red-500 border-red-400 text-white animate-pulse shadow-[0_0_25px_rgba(239,68,68,0.3)]' : 'bg-white/5 text-slate-400 border-white/10 hover:bg-white/10'}`}
-                  >
-                    <Mic size={18} /> {isListening ? "Syncing..." : "Voice Control"}
-                  </button>
                   {topPrediction && (
                     <button
                       onClick={handleDownloadReport}
@@ -450,8 +400,8 @@ export default function EwasteCheckPage() {
 
               <div className="mt-14 pt-10 border-t border-white/5 text-center">
                 <div className="bg-emerald-500/5 p-6 rounded-[2rem] border border-emerald-500/10">
-                  <p className="text-[10px] font-black text-emerald-500 uppercase mb-4 tracking-widest">Grad-CAM Projection</p>
-                  <p className="text-[11px] leading-relaxed text-slate-500 italic font-medium">Class Activation Mapping enabled. Visualizing neural weight distribution and entropy gradients across the localized tensor field.</p>
+                  <p className="text-[10px] font-black text-emerald-500 uppercase mb-4 tracking-widest">Object Detection Overlay</p>
+                  <p className="text-[11px] leading-relaxed text-slate-500 italic font-medium">Detected objects are highlighted with confidence scores for easier e-waste identification.</p>
                 </div>
               </div>
             </div>

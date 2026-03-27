@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import dynamic from "next/dynamic";
+import { usePathname } from "next/navigation";
 import logo from "../../assets/ELocate-s.png";
 import { getUser, handleLogout } from "../sign-in/auth";
 
@@ -11,6 +11,7 @@ import { Bell, Trophy, Zap, MessageCircle, Menu, X, MapPin } from "lucide-react"
 import { useGamification } from "../utils/useGamification";
 
 const Navbar = () => {
+  const pathname = usePathname();
   // ✅ hydration-safe mount guard
   const [mounted, setMounted] = useState(false);
   const [user, setUser] = useState<any>(null);
@@ -36,8 +37,20 @@ const Navbar = () => {
   }, []);
 
   const toggleNavbar = () => setIsNavbarActive(!isNavbarActive);
+  const closeNavbar = () => setIsNavbarActive(false);
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
   const toggleNotify = () => setIsNotifyOpen(!isNotifyOpen);
+
+  useEffect(() => {
+    setIsNavbarActive(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    document.body.style.overflow = isNavbarActive ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isNavbarActive]);
 
   // ✅ geolocation client-side only
   useEffect(() => {
@@ -75,8 +88,15 @@ const Navbar = () => {
         }
       },
       (error) => {
-        console.error("Geolocation error:", error);
-        setLocations("Enable Location");
+        if (error.code === error.PERMISSION_DENIED) {
+          setLocations("Enable Location");
+        } else if (error.code === error.POSITION_UNAVAILABLE) {
+          setLocations("Location unavailable");
+        } else if (error.code === error.TIMEOUT) {
+          setLocations("Location timeout");
+        } else {
+          setLocations("Location unavailable");
+        }
       }
     );
   }, []);
@@ -93,7 +113,7 @@ const Navbar = () => {
 
   return (
     <header className={`header ${isHeaderActive ? "active" : ""}`}>
-      <div className="container shadow-md flex items-center justify-between">
+      <div className="container shadow-md flex items-center justify-between gap-2">
 
         <Link href="/">
           <Image
@@ -112,7 +132,7 @@ const Navbar = () => {
               ELocate
             </Link>
 
-            <button onClick={toggleNavbar} className="nav-close-btn">
+            <button onClick={toggleNavbar} className="nav-close-btn" title="Close navigation menu">
               <X size={24} />
             </button>
           </div>
@@ -129,21 +149,27 @@ const Navbar = () => {
               "Rules",
             ].map(label => (
               <li key={label} className="navbar-link">
-                <Link href={label === "Home" ? "/" : `/${label.toLowerCase()}`}>
+                <Link href={label === "Home" ? "/" : `/${label.toLowerCase()}`} onClick={closeNavbar}>
                   {label.replace("-", " ")}
                 </Link>
               </li>
             ))}
 
-            <Link href="/five-r">5R</Link>
-            <Link href="/ewaste-check">E-Waste Check</Link>
-            <Link href="/analytics" className="navbar-link">Analytics</Link>
+            <li className="navbar-link">
+              <Link href="/five-r" onClick={closeNavbar}>5R</Link>
+            </li>
+            <li className="navbar-link">
+              <Link href="/ewaste-check" onClick={closeNavbar}>E-Waste Check</Link>
+            </li>
+            <li className="navbar-link">
+              <Link href="/analytics" onClick={closeNavbar}>Analytics</Link>
+            </li>
           </ul>
         </nav>
 
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-2 sm:gap-4 md:gap-6 shrink-0">
           {/* Notifications */}
-          <div className="relative">
+          <div className="relative hidden sm:block">
             <button onClick={toggleNotify} className="relative p-2 text-slate-600 hover:text-emerald-600 transition-colors">
               <Bell size={22} />
               <span className="absolute top-0 right-0 w-4 h-4 bg-red-500 text-white text-[10px] flex items-center justify-center rounded-full border-2 border-white font-bold">2</span>
@@ -191,12 +217,12 @@ const Navbar = () => {
               )}
             </div>
           ) : (
-            <Link href="/sign-in" className="bg-emerald-600 text-white px-6 py-2 rounded-xl font-bold hover:bg-emerald-700 shadow-lg shadow-emerald-200 transition-all">
+            <Link href="/sign-in" className="bg-emerald-600 text-white px-3 sm:px-6 py-2 rounded-xl font-bold text-xs sm:text-base hover:bg-emerald-700 shadow-lg shadow-emerald-200 transition-all">
               Sign In
             </Link>
           )}
 
-          <button onClick={toggleNavbar} className="nav-open-btn lg:hidden">
+          <button onClick={toggleNavbar} className="nav-open-btn lg:hidden" title="Open navigation menu">
             <Menu size={24} />
           </button>
         </div>

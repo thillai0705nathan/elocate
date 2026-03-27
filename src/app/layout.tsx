@@ -1,15 +1,20 @@
-"use client";
 import "./globals.css";
 import { Poppins } from "next/font/google";
 import Script from "next/script";
 import NextTopLoader from "nextjs-toploader";
 import Navbar from "./Header/Navbar"; // Client component
 import Footer from "./Footer/Footer"; // Client component
+import type { Viewport } from "next";
 
 const poppins = Poppins({
   subsets: ["latin"],
   weight: "500",
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

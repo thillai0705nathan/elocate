@@ -5,14 +5,11 @@ import Link from "next/link";
 import Image from "next/image";
 import logo from "../../assets/ELocate-s.png";
 import emailjs from "@emailjs/browser";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const ToastContainer = dynamic(
-  () => import("react-toastify").then((mod) => mod.ToastContainer),
-  { ssr: false }
-);
 import { Send, MapPin, Phone, Mail, Linkedin, Twitter, Instagram } from "lucide-react";
+
 const Footer = () => {
   const [email, setEmail] = useState("");
 
@@ -33,88 +30,121 @@ const Footer = () => {
   };
 
   return (
-    <footer className="footer shadow-2xl">
+    <footer className="footer">
       <ToastContainer position="top-right" autoClose={3000} theme="dark" />
-      <div className="container flex flex-wrap justify-between">
-        <div className="footer-brand">
-          <Link href="/">
-            <Image src={logo} alt="ELocate" width={100} height={100} />
-          </Link>
-          <p>
-            ELocate: Revolutionizing e-waste management. Connect with certified
-            recycling facilities and stay environmentally responsible.
-          </p>
-          <form onSubmit={handleSubmit} className="flex gap-2">
-            <input
-              type="email"
-              name="email"
-              placeholder="Join newsletter"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              required
-            />
-            <Send size={18} />
-          </form>
+      <div className="footer-top">
+        <div className="container">
+          <div className="footer-brand">
+            <Link href="/">
+              <Image src={logo} alt="ELocate" width={100} height={100} />
+            </Link>
+            <p>
+              ELocate: Revolutionizing e-waste management. Connect with certified
+              recycling facilities and stay environmentally responsible.
+            </p>
+            <form onSubmit={handleSubmit} className="newsletter-form">
+              <input
+                type="email"
+                name="email"
+                placeholder="Join newsletter"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="email-field"
+              />
+              <button type="submit" className="form-btn">
+                <Send size={18} />
+              </button>
+            </form>
+          </div>
+
+          <ul>
+            <li className="footer-list-title">Recycling Solutions</li>
+            <li>
+              <Link href="/recycle/smartphone" className="footer-link">
+                Smartphone Recycling
+              </Link>
+            </li>
+            <li>
+              <Link href="/recycle/laptop" className="footer-link">
+                Laptop & Computer Recycling
+              </Link>
+            </li>
+            <li>
+              <Link href="/recycle/accessories" className="footer-link">
+                Electronics Accessories
+              </Link>
+            </li>
+          </ul>
+
+          <ul>
+            <li className="footer-list-title">ELocate Platform</li>
+            <li>
+              <Link href="/about" className="footer-link">
+                Mission & Vision
+              </Link>
+            </li>
+            <li>
+              <Link href="/education" className="footer-link">
+                Education Center
+              </Link>
+            </li>
+          </ul>
+
+          <ul>
+            <li className="footer-list-title">Connect With Us</li>
+            <li className="footer-item">
+              <MapPin size={18} />
+              <span>Chh.Sambhajinagar, Chennai, India</span>
+            </li>
+            <li className="footer-item">
+              <Phone size={18} />
+              <Link href="tel:+911234567890" className="contact-link">
+                +91 123 456 7890
+              </Link>
+            </li>
+            <li className="footer-item">
+              <Mail size={18} />
+              <Link href="mailto:contact@elocate.com" className="contact-link">
+                contact@elocate.com
+              </Link>
+            </li>
+            <li className="social-list">
+              <Link href="#" className="social-link">
+                <Linkedin size={18} />
+              </Link>
+              <Link href="#" className="social-link">
+                <Instagram size={18} />
+              </Link>
+              <Link href="#" className="social-link">
+                <Twitter size={18} />
+              </Link>
+            </li>
+          </ul>
         </div>
-
-        <ul>
-          <li>Recycling Solutions</li>
-          <li>
-            <Link href="/recycle/smartphone">Smartphone Recycling</Link>
-          </li>
-          <li>
-            <Link href="/recycle/laptop">Laptop & Computer Recycling</Link>
-          </li>
-          <li>
-            <Link href="/recycle/accessories">Electronics Accessories</Link>
-          </li>
-        </ul>
-
-        <ul>
-          <li>ELocate Platform</li>
-          <li>
-            <Link href="/aboutus">Mission & Vision</Link>
-          </li>
-          <li>
-            <Link href="/education">Education Center</Link>
-          </li>
-        </ul>
-
-        <ul>
-          <li>Connect With Us</li>
-          <li className="flex items-center gap-2">
-            <MapPin size={18} />
-            Chh.Sambhajinagar, Chennai, India
-          </li>
-          <li className="flex items-center gap-2">
-            <Phone size={18} />
-            <Link href="tel:+911234567890">+91 123 456 7890</Link>
-          </li>
-          <li className="flex items-center gap-2">
-            <Mail size={18} />
-            <Link href="mailto:contact@elocate.com">contact@elocate.com</Link>
-          </li>
-          <li className="flex gap-2">
-            <Link href="#"><Linkedin size={18} /></Link>
-            <Link href="#"><Instagram size={18} /></Link>
-            <Link href="#"><Twitter size={18} /></Link>
-          </li>
-        </ul>
       </div>
 
       <div className="footer-bottom">
-        <p>
-          &copy; 2023 ELocate | All Rights Reserved by{" "}
-          <Link href="#">Team Spam Byte</Link>
-        </p>
-        <ul className="flex gap-4">
-          <li>
-            <Link href="/privacypolicy">Privacy Policy</Link>
-          </li>
-          <li>
-            <Link href="/termsandservices">Terms of Service</Link>
-          </li>
-        </ul>
+        <div className="container">
+          <p className="copyright">
+            &copy; 2023 ELocate | All Rights Reserved by{" "}
+            <Link href="#" className="copyright-link">
+              Team Spam Byte
+            </Link>
+          </p>
+          <ul className="footer-bottom-list">
+            <li>
+              <Link href="/privacypolicy" className="footer-bottom-link">
+                Privacy Policy
+              </Link>
+            </li>
+            <li>
+              <Link href="/termsandservices" className="footer-bottom-link">
+                Terms of Service
+              </Link>
+            </li>
+          </ul>
+        </div>
       </div>
     </footer>
   );

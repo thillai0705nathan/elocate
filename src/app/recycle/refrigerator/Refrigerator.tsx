@@ -1,4 +1,6 @@
 
+"use client";
+
 import {
   getEmail,
   getPhoneNumber,
@@ -10,6 +12,7 @@ import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { getApiUrl } from "@/app/utils/api";
+import { loadRecycleFacilities } from "@/app/utils/recycleFacilities";
 
 interface Brand {
   brand: string;
@@ -18,7 +21,7 @@ interface Brand {
 
 interface Facility {
   name: string;
-  capacity: string;
+  capacity: string | number;
   lon: number;
   lat: number;
   contact: string;
@@ -54,14 +57,9 @@ const Refrigerator: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    fetch(getApiUrl("/api/facilities"))
-      .then((response) => response.json())
-      .then((data) => {
-        setFacilityData(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching facilities:", error);
-      });
+    loadRecycleFacilities()
+      .then((data) => setFacilityData(data))
+      .catch(() => setFacilityData([]));
   }, []);
 
   const handleBrandChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -124,7 +122,7 @@ const Refrigerator: React.FC = () => {
 
   const email = getEmail();
   const userId = getUserID();
-  const phone = getPhoneNumber();
+  const [phone, setPhone] = useState<string>(() => getPhoneNumber() ?? "");
   const fullname = getfullname();
 
   const handleSubmit = async () => {
@@ -151,6 +149,7 @@ const Refrigerator: React.FC = () => {
           items: recycleItem,
           price: recycleItemPrice,
           facilityName: selectedFacility,
+          phone,
         };
 
         setIsLoading(true);
@@ -342,7 +341,7 @@ const Refrigerator: React.FC = () => {
             type="tel"
             id="phone"
             value={phone ?? ""}
-            readOnly
+            onChange={(e) => setPhone(e.target.value)}
             className="w-full p-2 sign-field rounded-md placeholder:font-light placeholder:text-gray-500"
           />
         </div>
@@ -361,7 +360,7 @@ const Refrigerator: React.FC = () => {
             className="w-full p-2 sign-field rounded-md placeholder:font-light placeholder:text-gray-500"
           >
             <option value="">Select Facility</option>
-            {facilityData.map((f) => (
+            {Array.isArray(facilityData) && facilityData.map((f) => (
               <option key={f.name} value={f.name}>
                 {f.name}
               </option>
