@@ -19,7 +19,7 @@ const normalizeFacilities = (payload: unknown): RecycleFacility[] => {
       ? (payload as any).facilities
       : [];
 
-  return raw.filter((item): item is RecycleFacility => {
+  return (raw as any[]).filter((item: any): item is RecycleFacility => {
     return (
       item &&
       typeof item === "object" &&
