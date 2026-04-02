@@ -27,10 +27,10 @@ const Signin: React.FC = () => {
   };
 
   const login = async () => {
-    toast.loading("Loading..")
+    const toastId = toast.loading("Loading..");
     try {
       const response = await axios.post(
-        "https://elocate-server.onrender.com/api/v1/auth/login",
+        "/api/auth/login",
         formData
       );
       const user = response.data;
@@ -38,12 +38,12 @@ const Signin: React.FC = () => {
 
       localStorage.setItem("user", JSON.stringify(user));
 
-      toast.success("Login Successful!");
+      toast.update(toastId, { render: "Login Successful!", type: "success", isLoading: false, autoClose: 3000 });
 
       if (user) {
         setUser(user);
         setEmail(user.email);
-        setToken(user.token)
+        setToken(user.token);
         setPhoneNumber(user.phoneNumber);
         setfullname(user.fullname);
         setUserID(user.id);
@@ -53,9 +53,9 @@ const Signin: React.FC = () => {
       }
 
       window.location.href = "/";
-    } catch (error) {
+    } catch (error: any) {
       console.error("Login failed:", error);
-      toast.error("Login Failed. Please check your credentials.");
+      toast.update(toastId, { render: "Login Failed. Please check your credentials.", type: "error", isLoading: false, autoClose: 3000 });
     }
   };
 

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import emailjs from "@emailjs/browser";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import "react-toastify/ReactToastify.css";
 import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaLinkedin, FaTwitter, FaInstagram, FaWhatsapp, FaPaperPlane } from "react-icons/fa";
 
 import { getApiUrl } from "@/app/utils/api";

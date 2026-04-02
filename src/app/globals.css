@@ -817,21 +817,22 @@ body {
   top: 0;
   right: 0;
   width: min(85vw, 320px);
+  height: 100vh;
   height: 100dvh;
-  background-color: var(--rich-black-fogra-39);
+  background-color: transparent;
   color: var(--white);
   padding: 30px 20px;
   overflow-y: auto;
   visibility: hidden;
-  transition: 0.25s var(--cubic-in);
+  transition: transform 0.35s var(--cubic-in), visibility 0.35s;
   transform: translateX(100%);
-  z-index: 30;
+  z-index: 40;
 }
 
 .navbar.active {
   visibility: visible;
-  transform: translateX(0); 
-  transition: transform 0.5s ease;
+  transform: translateX(0);
+  transition: transform 0.5s var(--cubic-out), visibility 0s;
 }
 
 .navbar .logo,
@@ -848,25 +849,41 @@ body {
 
 .navbar-link {
   padding-block: 10px;
+  color: var(--rich-black-fogra-29-1);
   transition: var(--transition-1);
 }
 
 .navbar-link:is(:hover, :focus) { color: var(--go-green); }
 
+/* Force links to be white ONLY when the mobile offcanvas menu is active */
+.navbar.active .navbar-link,
+.navbar.active .navbar-link a,
+.navbar.active a {
+  color: #ffffff !important;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5); /* added for extra contrast against background */
+}
+
 .overlay {
   position: fixed;
   inset: 0;
-  background-color: hsla(0, 0%, 0%, 0.45);
-  backdrop-filter: blur(1px);
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #000000;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   visibility: hidden;
   opacity: 0;
-  transition: var(--transition-1);
-  z-index: 20;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
+  z-index: 25;
+  pointer-events: none;
 }
 
 .overlay.active {
   visibility: visible;
   opacity: 1;
+  pointer-events: all;
 }
 
 
@@ -1704,4 +1721,19 @@ body {
 
 .animate-scrolling-images {
   animation: scrolling-images 5s linear infinite;
+}
+
+/* --- FORCE MOBILE MENU TEXT COLOR --- */
+@media (max-width: 991px) {
+  .navbar-link,
+  .navbar-link a,
+  .navbar.active .navbar-list .navbar-link,
+  .navbar.active .navbar-list .navbar-link a,
+  .navbar.active a.logo,
+  .navbar.active .nav-close-btn,
+  .navbar.active a {
+    color: #ffffff !important;
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.7) !important;
+    opacity: 1 !important;
+  }
 }

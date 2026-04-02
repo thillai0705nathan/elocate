@@ -42,10 +42,11 @@ const FacilityMap: React.FC = () => {
     mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || "";
 
     setIsLoading(true);
-    getLocation().then((coordinates) => {
-      if (coordinates) {
-        setClientLocation(coordinates.coordinates);
+    getLocation().then((result) => {
+      if (result && result.coordinates) {
+        setClientLocation(result.coordinates);
       } else {
+        // Default fallback to Chh. Sambhajinagar, India when location is denied or unavailable
         setClientLocation([75.7139, 19.7515]);
       }
       setIsLoading(false);

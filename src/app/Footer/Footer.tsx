@@ -6,7 +6,7 @@ import Image from "next/image";
 import logo from "../../assets/ELocate-s.png";
 import emailjs from "@emailjs/browser";
 import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import "react-toastify/ReactToastify.css";
 
 import { Send, MapPin, Phone, Mail, Linkedin, Twitter, Instagram } from "lucide-react";
 
@@ -126,12 +126,7 @@ const Footer = () => {
 
       <div className="footer-bottom">
         <div className="container">
-          <p className="copyright">
-            &copy; 2023 ELocate | All Rights Reserved by{" "}
-            <Link href="#" className="copyright-link">
-              Team Spam Byte
-            </Link>
-          </p>
+
           <ul className="footer-bottom-list">
             <li>
               <Link href="/privacypolicy" className="footer-bottom-link">

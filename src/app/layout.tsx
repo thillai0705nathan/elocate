@@ -44,14 +44,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
       {/* Tawk.to Chatbot */}
       <Script
-        id="tawk_chatbot"
-        type="text/javascript"
+        id="tawk-script"
+        strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: `
             var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+            Tawk_API.onLoad = function() {
+              console.log("Tawk chatbot loaded successfully.");
+            };
             (function(){
-              var s1=document.createElement("script");
-              var s0=document.getElementsByTagName("script")[0];
+              var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
               s1.async=true;
               s1.src='https://embed.tawk.to/656e84bbbfb79148e59a22a3/1hgrrd06h';
               s1.charset='UTF-8';

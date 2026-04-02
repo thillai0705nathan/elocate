@@ -10,7 +10,7 @@ import {
 } from "@/app/sign-in/auth";
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import "react-toastify/ReactToastify.css";
 import { getApiUrl } from "@/app/utils/api";
 import { loadRecycleFacilities } from "@/app/utils/recycleFacilities";
 
