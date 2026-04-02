@@ -2,18 +2,18 @@ services:
   - type: web
     name: elocate-web
     env: node
-    plan: free          # choose your plan
-    region: oregon       # pick a region
-    branch: main         # branch to deploy
+    plan: free
+    region: oregon
+    branch: main
     buildCommand: |
       npm ci
       npm run build
     startCommand: npm run start
-    autoDeploy: true     # deploy on each push
+    autoDeploy: true
     envVars:
-      - key: postgresql://elocate_db_user:muwPJSUmlrfYvpfzSO92yzVO5a7l1q6l@dpg-d6m52g7kijhs73e6f9pg-a/elocate_db
+      - key: DATABASE_URL
         fromDatabase:
           name: elocate-db
           property: connectionString
-      - key: NEXT_PUBLIC_MAPBOX_TOKEN
-        value: "<your token>"
+      - key: NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
+        sync: false # You MUST add the value manually in the Render Dashboard

@@ -71,53 +71,60 @@ const Signin: React.FC = () => {
           <span className="font-light text-gray-400 mb-8">
             Welcome back! Please enter your details
           </span>
-          <form className="py-4">
+          <form 
+            onSubmit={(e) => {
+              e.preventDefault();
+              login();
+            }}
+            className="py-4"
+          >
             <span className="mb-2 text-md">Email</span>
             <input
-              type="text"
+              type="email"
               className="w-full p-2 sign-field rounded-md placeholder:font-light placeholder:text-gray-500"
               name="email"
               id="email"
               placeholder="email"
               onChange={handleInputChange}
               value={formData.email}
+              required
             />
-          </form>
-          <div className="py-4">
-            <span className="mb-2 text-md">Password</span>
-            <input
-              type={showPassword ? "text" : "password"}
-              name="password"
-              id="password"
-              placeholder="password"
-              className="w-full p-2 sign-field rounded-md placeholder:font-light placeholder:text-gray-500"
-              onChange={handleInputChange}
-              value={formData.password}
-            />
-          </div>
-          <div className="flex justify-between w-full py-4">
-            <label className="flex items-center text-sm mr-24">
+            <div className="py-4">
+              <span className="mb-2 text-md">Password</span>
               <input
-                type="checkbox"
-                name="ch"
-                id="ch"
-                placeholder="checkbox"
-                className="mr-2 p-1"
-                onClick={togglePasswordVisibility}
+                type={showPassword ? "text" : "password"}
+                name="password"
+                id="password"
+                placeholder="password"
+                className="w-full p-2 sign-field rounded-md placeholder:font-light placeholder:text-gray-500"
+                onChange={handleInputChange}
+                value={formData.password}
+                required
               />
-              Show Password
-            </label>
-            <Link href="/forget-password" className="font-bold text-black">
-              forgot password ?
-            </Link>
-          </div>
+            </div>
+            <div className="flex justify-between w-full py-4">
+              <label className="flex items-center text-sm">
+                <input
+                  type="checkbox"
+                  name="ch"
+                  id="ch"
+                  className="mr-2 p-1"
+                  onClick={togglePasswordVisibility}
+                />
+                Show Password
+              </label>
+              <Link href="/forget-password" className="font-bold text-black">
+                forgot password ?
+              </Link>
+            </div>
 
-          <button
-            className="w-full bg-black mt-4 text-white p-2 rounded-lg mb-6 hover:bg-emerald-400 hover:text-black hover:border hover:border-gray-300"
-            onClick={login}
-          >
-            Sign in
-          </button>
+            <button
+              type="submit"
+              className="w-full bg-black mt-4 text-white p-2 rounded-lg mb-6 hover:bg-emerald-400 hover:text-black hover:border hover:border-gray-300"
+            >
+              Sign in
+            </button>
+          </form>
 
           <div className="text-center text-gray-400">
             Dont have an account?

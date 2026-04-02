@@ -33,8 +33,21 @@ export async function POST(request: Request) {
             username: user.name || user.email.split("@")[0],
             token: "mock-jwt-token"
         });
-    } catch (error) {
+    } catch (error: any) {
         console.error("Register error:", error);
-        return NextResponse.json({ message: "Internal server error" }, { status: 500 });
+        
+        // Log environment status for debugging
+        console.log("Database connection status check...");
+        try {
+            await prisma.$connect();
+            console.log("Database connected successfully.");
+        } catch (dbError) {
+            console.error("Database connection check failed:", dbError);
+        }
+
+        return NextResponse.json({ 
+            message: "Internal server error",
+            error: process.env.NODE_ENV === "development" ? error.message : undefined 
+        }, { status: 500 });
     }
 }
